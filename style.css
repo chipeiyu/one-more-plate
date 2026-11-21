@@ -198,3 +198,31 @@ input {
 .plate.demo img { object-fit: contain; padding: 12px; background: #fff; opacity: .85; }
 .demo-note { grid-column: 1 / -1; text-align: center; margin: 0; }
 .demo-note span { background: var(--paper); border-radius: 99px; padding: 4px 12px; color: var(--blue); }
+
+/* ⑯ 第 17 步：滑過、按下的小變化 */
+/* 標題：每個字母可以單獨跳一下 */
+.title .ch { display: inline-block; transition: transform .25s, color .25s; }
+.title .ch:hover { transform: translateY(-8px) rotate(-6deg); color: var(--red); }
+.title.wave .ch { animation: wave .6s ease both; animation-delay: calc(var(--i) * 40ms); }
+@keyframes wave {
+  40% { transform: translateY(-14px) rotate(-6deg); color: var(--red); }
+  100% { transform: none; }
+}
+
+/* 按鈕：滑過浮起來，按下去壓下去 */
+.btn, .chip, .menu button, .seg button, .card {
+  transition: transform .15s, box-shadow .15s, background-color .15s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 0 var(--blue); }
+.btn:active { transform: translateY(2px); box-shadow: none; }
+.btn.red:hover { box-shadow: 0 6px 0 #9c241c; }
+.btn.red:active { transform: translateY(3px); box-shadow: 0 1px 0 #9c241c; }
+.chip:hover, .menu button:hover { transform: translateY(-2px) rotate(-1deg); }
+.chip:active, .menu button:active, .seg button:active { transform: scale(.94); }
+.card:hover { transform: translateY(-3px) rotate(-.5deg); box-shadow: 0 6px 0 var(--line); }
+.card:active { transform: scale(.98); }
+
+/* 不喜歡動畫的人（手機「減少動態效果」）就不要動 */
+@media (prefers-reduced-motion: reduce) {
+  .title .ch, .btn, .chip, .menu button, .seg button, .card { transition: none; animation: none !important; }
+}

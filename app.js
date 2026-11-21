@@ -701,5 +701,17 @@ picFor = (name) => {
   return hit ? IMG(hit[1]) : null;
 };
 
+// ===== 第 17 步：標題拆成一個一個字母 =====
+const title = $('.title');
+let i = 0;
+title.innerHTML = title.innerHTML.split(/(<br>)/).map((part) => part === '<br>' ? part
+  : [...part].map((c) => c === ' ' ? ' ' : `<span class="ch" style="--i:${i++}">${c}</span>`).join('')).join('');
+// 點一下標題（手機沒有滑鼠，用點的），全部字母跳一波
+title.addEventListener('click', () => {
+  title.classList.remove('wave');
+  void title.offsetWidth;                // 讓動畫可以重新播放的小技巧
+  title.classList.add('wave');
+});
+
 
 refresh();   // ← 永遠放在檔案最後一行：一打開網頁就把畫面畫出來
