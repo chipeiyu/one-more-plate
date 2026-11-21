@@ -158,3 +158,43 @@ input {
 }
 .newbox h3 { margin: 0 0 4px; color: var(--red); }
 .newbox p { margin: 10px 0 0; }
+
+/* ⑮ 第 15 步：水彩插圖 */
+#home { position: relative; }
+.title, .tagline { position: relative; z-index: 1; }
+.float {
+  position: absolute; z-index: 2; pointer-events: auto;
+  filter: drop-shadow(0 8px 10px #0002); transition: transform .3s;
+}
+.float:hover, .float:active { transform: rotate(-8deg) scale(1.05); }
+.f1 { width: clamp(100px, 22vw, 220px); right: 0;   top: 0; transform: rotate(6deg); }
+.f2 { width: clamp(52px, 10vw, 110px);  right: 26%; top: 130px; }
+.f3 { width: clamp(90px, 18vw, 190px);  right: 6%;  top: 260px; transform: rotate(-5deg); }
+.f4 { width: clamp(90px, 18vw, 200px);  right: 30%; top: 300px; }
+@media (max-width: 700px) {
+  .f1 { width: 118px; top: 24px; right: -6px; }
+  .f2 { width: 46px; right: 4px; top: 136px; }
+  .f3, .f4 { display: none; }
+}
+
+/* 分類按鈕前面的小圖示 */
+.chip[data-cat]::before {
+  content: ''; display: inline-block; width: 24px; height: 24px; margin-right: 4px;
+  vertical-align: -6px; background: center / contain no-repeat;
+}
+.chip[data-cat="正餐"]::before { background-image: url(images/omelette.webp); }
+.chip[data-cat="甜點"]::before { background-image: url(images/roll-cake.webp); }
+.chip[data-cat="飲料"]::before { background-image: url(images/iced-latte.webp); }
+
+/* 食譜卡片右上角的小插圖、食譜頁的大插圖 */
+.card { position: relative; }
+.card.has-pic { padding-right: 96px; }
+.card-pic { position: absolute; right: 10px; top: 10px; width: 78px; height: 78px; object-fit: contain; }
+.recipe-pic { display: block; width: min(240px, 60vw); margin: 10px auto 0; }
+
+/* 空清單、示範盤子、設定頁 */
+.empty-art { text-align: center; color: var(--mute); padding: 10px 0 20px; }
+.empty-art img { width: 160px; display: block; margin: 0 auto 6px; }
+.plate.demo img { object-fit: contain; padding: 12px; background: #fff; opacity: .85; }
+.demo-note { grid-column: 1 / -1; text-align: center; margin: 0; }
+.demo-note span { background: var(--paper); border-radius: 99px; padding: 4px 12px; color: var(--blue); }

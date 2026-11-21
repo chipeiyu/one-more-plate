@@ -577,4 +577,129 @@ $('#newBox').addEventListener('click', (e) => {
   const b = e.target.closest('[data-r]');
   if (b) openRecipe($('#newBox').groups[b.dataset.g].list[b.dataset.r]);
 });
+
+// ===== 第 15 步：水彩插圖 =====
+const IMG = (name) => `images/${name}.webp`;
+
+// ① 首頁大標題旁的漂浮插圖
+$('#home').insertAdjacentHTML('afterbegin', ['pudding', 'iced-latte', 'roll-cake', 'fried-egg']
+  .map((n, i) => `<img class="float f${i + 1}" src="${IMG(n)}" alt="">`).join(''));
+
+// ② 菜名裡有這些字，就配這張圖（由上往下找，先找到先用）
+const PICS = [
+  ['布丁', 'pudding'], ['鮭魚', 'salmon'], ['牛肉', 'steak'], ['吐司', 'sandwich'],
+  ['鬆餅', 'roll-cake'], ['煎蘋果', 'grape-tart'], ['蛋包飯', 'omelette'], ['炒蛋', 'omelette'],
+  ['蛋炒飯', 'omelette'], ['蛋花湯', 'fried-egg'], ['親子丼', 'fried-egg'],
+  ['牛奶', 'iced-latte'], ['奶昔', 'iced-latte'],
+];
+function picFor(name) {
+  const hit = PICS.find(([word]) => name.includes(word));
+  return hit ? IMG(hit[1]) : null;
+}
+
+// 食譜卡片：畫完之後，幫有圖的卡片補上插圖
+const renderHomePlain = renderHome;
+renderHome = () => {
+  renderHomePlain();
+  document.querySelectorAll('#recipes .card').forEach((card) => {
+    const pic = picFor($('#recipes').list[card.dataset.i].name);
+    if (!pic) return;
+    card.classList.add('has-pic');
+    card.insertAdjacentHTML('afterbegin', `<img class="card-pic" src="${pic}" alt="">`);
+  });
+};
+renders[renders.indexOf(renderHomePlain)] = renderHome;
+
+// 食譜頁：標題上面放大張插圖
+const openRecipeNoPic = openRecipe;
+openRecipe = (r) => {
+  openRecipeNoPic(r);
+  const pic = picFor(r.name);
+  if (pic && !$('#recipePage').hidden) {
+    $('#recipePage h1').insertAdjacentHTML('beforebegin', `<img class="recipe-pic" src="${pic}" alt="">`);
+  }
+};
+
+// ③ 購物清單是空的時候
+const renderShopPlain = renderShop;
+renderShop = () => {
+  renderShopPlain();
+  if (!shop.length) {
+    $('#shopList').innerHTML = `<div class="empty-art"><img src="${IMG('hotdog')}" alt="">清單空空，冰箱滿滿？</div>`;
+  }
+};
+renders[renders.indexOf(renderShopPlain)] = renderShop;
+
+// ④「我煮過的」還沒有照片時，先擺三盤示範
+const renderCookedPlain = renderCooked;
+renderCooked = () => {
+  renderCookedPlain();
+  if (!cooked.length) {
+    $('#plates').innerHTML = [['steak', '煎牛排'], ['salmon', '奶油檸檬鮭魚'], ['omelette', '歐姆蛋']]
+      .map(([img, name]) => `<div class="plate demo"><img src="${IMG(img)}" alt=""><b>${name}</b></div>`).join('')
+      + '<p class="demo-note"><span>這是示範，拍照上傳後就會換成你做的菜</span></p>';
+  }
+};
+renders[renders.indexOf(renderCookedPlain)] = renderCooked;
+
+// ⑤ 飲食設定頁上面放一張三明治
+const openPrefsPlain = openPrefs;
+function addPrefsPic() {
+  $('#recipePage h1').insertAdjacentHTML('beforebegin', `<img class="recipe-pic" src="${IMG('sandwich')}" alt="">`);
+}
+openPrefs = () => { openPrefsPlain(); addPrefsPic(); };
+$('#prefsBtn').onclick = openPrefs;                       // 按鈕改成用新的版本
+if ($('#savePrefs') && !$('#recipePage').hidden) addPrefsPic();   // 第一次打開時設定頁已經開著
+
+// ===== 第 16 步：每張插圖都有一道同名的菜 =====
+// ① 新食材：加進食材資料庫，也補進「＋ 常用食材」按鈕
+const NEW_FOOD = {
+  泡菜: [30, '冷藏', '蔬菜'], 櫛瓜: [5, '冷藏', '蔬菜'], 麝香葡萄: [5, '冷藏', '水果'],
+  牛排: [2, '冷藏', '肉和海鮮'], 熱狗: [10, '冷藏', '肉和海鮮'],
+  莫札瑞拉起司: [14, '冷藏', '蛋奶豆'], 鮮奶油: [7, '冷藏', '蛋奶豆'],
+  冷凍水餃: [90, '冷凍', '主食'], 春捲皮: [30, '冷凍', '主食'], 披薩餅皮: [60, '冷凍', '主食'], 熱狗麵包: [3, '常溫', '主食'],
+};
+Object.assign(FOOD, NEW_FOOD);
+Object.entries(NEW_FOOD).forEach(([name, [, , group]]) => {
+  document.querySelectorAll('.quick')[GROUPS.indexOf(group)]
+    .insertAdjacentHTML('beforeend', `<button class="chip" data-food="${name}">${name}</button>`);
+});
+WORDS.紅肉.push('熱狗', '培根', '水餃');          // 這些通常有豬肉，吃素時要擋掉
+WORDS.豬肉.push('熱狗', '培根', '水餃');
+
+// ② 新食譜：一張圖一道菜
+BOOK.push(
+  R('正餐', '煎牛排', 15, ['牛排', '奶油', '蒜頭'], ['牛排退冰到室溫，擦乾，撒鹽和黑胡椒。', '鍋子燒到冒煙，每面煎兩分鐘。', '加奶油和拍碎的蒜頭，一邊煎一邊把奶油淋在肉上。', '起鍋靜置五分鐘再切。']),
+  R('正餐', '歐姆蛋', 8, ['雞蛋', '鮮奶', '洋蔥', '起司片'], ['洋蔥切丁炒軟盛起。', '蛋加鮮奶、鹽打勻。', '小火倒蛋液，邊緣凝固時鋪洋蔥和起司。', '對折起鍋。']),
+  R('正餐', '荷包蛋', 5, ['雞蛋'], ['鍋子熱油，小火打入雞蛋。', '蛋白邊緣變脆、蛋黃還半熟就起鍋，撒鹽和黑胡椒。']),
+  R('正餐', '起司菠菜烤吐司', 10, ['吐司', '起司片', '菠菜', '奶油'], ['菠菜燙熟擠乾。', '吐司夾起司和菠菜，外面抹奶油。', '平底鍋小火壓著煎到兩面金黃、起司融化。']),
+  R('正餐', '熱狗堡', 10, ['熱狗', '熱狗麵包', '高麗菜'], ['熱狗煎到表面微焦。', '麵包稍微烤熱，鋪高麗菜絲。', '放上熱狗，擠番茄醬和黃芥末。']),
+  R('正餐', '煎餃', 12, ['冷凍水餃'], ['平底鍋放油，水餃排好開中火。', '底部微焦時加水到餃子一半高，蓋鍋燜到水乾。', '打開鍋蓋再煎一分鐘，底部脆了就起鍋。']),
+  R('正餐', '炸春捲', 25, ['春捲皮', '豬絞肉', '高麗菜', '紅蘿蔔'], ['絞肉炒熟，加高麗菜絲、紅蘿蔔絲炒軟，放涼。', '春捲皮包入餡料，捲緊。', '中火炸到金黃，或用氣炸鍋 200 度 10 分鐘。']),
+  R('正餐', '瑪格麗特披薩', 20, ['披薩餅皮', '牛番茄', '莫札瑞拉起司', '九層塔'], ['餅皮抹番茄醬。', '鋪番茄片和撕小塊的起司。', '烤箱 220 度烤 10 分鐘，出爐放九層塔。']),
+  R('正餐', '泡菜燉豬肉', 20, ['泡菜', '豬肉片', '洋蔥', '青蔥'], ['豬肉片炒到出油。', '加泡菜和洋蔥炒香。', '加一碗水燉十分鐘，撒蔥段。']),
+  R('正餐', '石鍋拌飯', 25, ['白飯', '雞蛋', '菠菜', '豆芽菜', '紅蘿蔔', '豬絞肉'], ['菠菜、豆芽菜燙熟，紅蘿蔔炒軟，絞肉用醬油炒熟。', '碗底抹香油，鋪白飯。', '把配料圍一圈，中間放蛋黃。', '加韓式辣醬，拌勻再吃。']),
+  R('正餐', '大醬湯', 20, ['嫩豆腐', '櫛瓜', '洋蔥', '青蔥'], ['水煮滾，拌入兩大匙韓式大醬。', '加洋蔥、櫛瓜煮五分鐘。', '放豆腐塊再煮三分鐘，撒蔥花。']),
+  R('正餐', '起司熱狗', 20, ['熱狗', '莫札瑞拉起司', '雞蛋'], ['熱狗和起司條一起插在竹籤上。', '沾麵糊、再滾麵包粉。', '中火炸到金黃，淋番茄醬和黃芥末。']),
+  R('正餐', '泡菜煎餅', 15, ['泡菜', '青蔥', '雞蛋'], ['泡菜切碎，和麵粉、蛋、一點泡菜汁、水拌成麵糊。', '加蔥段拌勻。', '平底鍋多放點油，倒麵糊攤平，兩面煎到酥脆。']),
+  R('甜點', '草莓蛋糕捲', 60, ['雞蛋', '鮮奶油', '草莓'], ['蛋白打發，加蛋黃和低筋麵粉拌勻。', '倒進烤盤，180 度烤 12 分鐘，放涼。', '抹打發的鮮奶油，放草莓，捲起來冷藏一小時。']),
+  R('甜點', '麝香葡萄塔', 30, ['麝香葡萄', '鮮奶油'], ['塔皮烤到金黃放涼（可以買現成的）。', '鮮奶油加糖打發，擠進塔裡。', '鋪滿洗乾淨擦乾的葡萄。']),
+  R('飲料', '焦糖冰拿鐵', 5, ['鮮奶'], ['杯子裝冰塊，倒鮮奶到七分滿。', '慢慢倒入濃縮咖啡。', '擠鮮奶油，淋焦糖醬。']),
+);
+
+// ③ 插圖改成「菜名完全一樣才配圖」，不再用相近的字湊
+PICS.length = 0;
+PICS.push(
+  ['鮮奶蒸布丁', 'pudding'], ['奶油檸檬鮭魚', 'salmon'], ['煎牛排', 'steak'], ['歐姆蛋', 'omelette'],
+  ['荷包蛋', 'fried-egg'], ['起司菠菜烤吐司', 'sandwich'], ['熱狗堡', 'hotdog'], ['煎餃', 'gyoza'],
+  ['炸春捲', 'spring-roll'], ['瑪格麗特披薩', 'pizza'], ['泡菜燉豬肉', 'kimchi-stew'], ['石鍋拌飯', 'bibimbap'],
+  ['大醬湯', 'doenjang-stew'], ['起司熱狗', 'corn-dog'], ['泡菜煎餅', 'kimchi-pancake'],
+  ['草莓蛋糕捲', 'roll-cake'], ['麝香葡萄塔', 'grape-tart'], ['焦糖冰拿鐵', 'iced-latte'],
+);
+picFor = (name) => {
+  const hit = PICS.find(([dish]) => dish === name);
+  return hit ? IMG(hit[1]) : null;
+};
+
+
 refresh();   // ← 永遠放在檔案最後一行：一打開網頁就把畫面畫出來
