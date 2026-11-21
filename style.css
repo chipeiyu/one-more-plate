@@ -126,7 +126,7 @@ input {
 .overlay h1 { color: var(--blue); font-size: 40px; margin: 10px 0 0; }
 .overlay li { font-family: "LXGW WenKai TC", serif; font-size: 19px; margin: 8px 0; }
 
-/* ⑪ 我煮過的：格子桌巾上的圓盤子 */
+/* ⑪ 我燒過的：格子桌巾上的圓盤子 */
 .plates {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 20px; padding: 24px; border-radius: 24px; margin-top: 16px; min-height: 200px;
@@ -147,6 +147,7 @@ input {
   }
   .menu button { border: 0; font-size: 13px; padding: 0; }
 }
+
 /* ⑬ 第 14 步：先藏起「我想吃…」，之後要用再刪掉這行 */
 .wish { display: none; }
 
