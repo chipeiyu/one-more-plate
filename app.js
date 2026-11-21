@@ -13,6 +13,7 @@ document.querySelector('.menu').addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (b) go(b.dataset.page);
 });
+
 // ===== 第 4 步：冰箱 =====
 const DAY = 24 * 60 * 60 * 1000;
 function today() { const d = new Date(); d.setHours(0, 0, 0, 0); return d; }
@@ -174,6 +175,7 @@ function openRecipe(r) {
     $('#toShop').textContent = '已加進購物清單';
   };
 }
+
 // ===== 第 6 步：我想吃… + 購物清單 =====
 const WISH = {
   '酸菜魚': { time: 35, need: ['鱸魚片', '酸菜', '雞蛋', '蒜頭', '青蔥', '乾辣椒', '花椒'],
@@ -218,6 +220,7 @@ $('#bought').addEventListener('click', () => {
   shop = shop.filter((s) => !s.done);
   save(); refresh();
 });
+
 // ===== 第 7 步：我煮過的 =====
 function renderCooked() {
   $('#plates').innerHTML = cooked.map((c) => `
@@ -243,6 +246,7 @@ $('#photoInput').addEventListener('change', (e) => {
   };
   img.src = URL.createObjectURL(file);
 });
+
 // ===== 第 9 步：飲食設定 =====
 const MEATS = ['都吃', '不吃紅肉', '只吃海鮮', '吃素'];
 const AVOIDS = ['香菜', '海鮮', '豬肉', '牛肉', '奶製品', '蛋', '堅果', '辣', '洋蔥', '菇類'];
@@ -318,9 +322,20 @@ function openPrefs() {
   };
 }
 
-$('#home').insertAdjacentHTML('beforeend', '<p><button class="btn" id="prefsBtn">飲食設定</button></p>');
+// 在推薦食譜的上方顯示目前的設定，旁邊放「修改」按鈕
+$('.seg').insertAdjacentHTML('beforebegin', `
+  <div class="add" style="align-items:center">
+    <span id="prefsText" style="flex:1"></span>
+    <button class="btn" id="prefsBtn">修改飲食設定</button>
+  </div>`);
 $('#prefsBtn').onclick = openPrefs;
+function renderPrefs() {
+  if (!prefs) return;
+  $('#prefsText').textContent = `飲食設定：${prefs.meat}${prefs.avoid.length ? '・不吃' + prefs.avoid.join('、') : ''}`;
+}
+renders.push(renderPrefs);
 if (!prefs) openPrefs();               // 第一次打開就先問
+
 // ===== 第 10 步：食譜和食材變多 =====
 // 常見食材：[保存天數, 放哪裡, 分類]
 const FOOD = {
@@ -393,6 +408,7 @@ Object.assign(WISH, {
     steps: ['豆干切丁，小黃瓜切絲。', '絞肉炒香，加豆干丁。', '加甜麵醬、豆瓣醬和一點水煮五分鐘。', '麵條煮好，淋炸醬，鋪小黃瓜絲。'] },
 });
 WORDS.堅果 = ['花生', '核桃', '杏仁', '腰果', '堅果'];   // 補上第 9 步的堅果判斷
+
 // ===== 第 11 步：加食材更快 =====
 const PLACES = ['冷藏', '冷凍', '常溫'];
 const GROUPS = ['蔬菜', '水果', '肉和海鮮', '蛋奶豆', '主食'];
@@ -454,6 +470,7 @@ $('#addForm').addEventListener('submit', () => {
   if (last && !last.place) last.place = foodInfo(last.name)[1];
   save();
 });
+
 // ===== 第 12 步：找菜更方便 =====
 let favs = load('favs', []);              // 收藏的菜名
 let query = '';
@@ -509,6 +526,7 @@ openRecipe = (r) => {
     renderHome();
   };
 };
+
 // ===== 第 13 步：「我想吃…」缺的食材自動加進購物清單 =====
 $('#wishForm').addEventListener('submit', () => {
   // 第 6 步已經打開食譜頁了；有「缺的加進購物清單」按鈕，就幫使用者按下去
@@ -517,4 +535,6 @@ $('#wishForm').addEventListener('submit', () => {
     $('#toShop').textContent = '缺的食材已自動加進購物清單 ✓';
   }
 });
+
+
 refresh();   // ← 永遠放在檔案最後一行：一打開網頁就把畫面畫出來
