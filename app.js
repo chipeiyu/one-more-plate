@@ -714,4 +714,7 @@ title.addEventListener('click', () => {
 });
 
 
+// 第 18 步：冰箱是空的，就先打開冰箱
+if (items.length === 0) go('fridge');
+
 refresh();   // ← 永遠放在檔案最後一行：一打開網頁就把畫面畫出來
