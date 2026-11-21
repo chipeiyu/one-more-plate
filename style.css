@@ -226,3 +226,13 @@ input {
 @media (prefers-reduced-motion: reduce) {
   .title .ch, .btn, .chip, .menu button, .seg button, .card { transition: none; animation: none !important; }
 }
+
+/* 第 20 步：盤子右上角的刪除鈕 */
+.plate { position: relative; }
+.plate .del {
+  position: absolute; top: 0; right: 0;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 2px solid var(--blue); background: #fff; color: var(--blue);
+  font-size: 20px; line-height: 1; cursor: pointer;
+}
+.plate .del:active { background: var(--blue); color: #fff; }

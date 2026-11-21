@@ -736,6 +736,27 @@ PICS.push(
   ['味噌豆腐湯', 'miso-soup'], ['紅燒肉', 'braised-pork'], ['泰式酸辣蝦湯', 'tom-yum'],
 );
 
+// ===== 第 20 步：「我煮過的」可以刪掉照片 =====
+// ① 每個盤子右上角加一顆 ×（示範的盤子不加）
+const renderCookedNoDel = renderCooked;
+renderCooked = () => {
+  renderCookedNoDel();
+  document.querySelectorAll('#plates .plate:not(.demo)').forEach((plate, i) => {
+    plate.insertAdjacentHTML('beforeend', `<button class="del" data-i="${i}" aria-label="刪除">×</button>`);
+  });
+};
+renders[renders.indexOf(renderCookedNoDel)] = renderCooked;
+
+// ② 按 × 先問一次，確定才刪
+$('#plates').addEventListener('click', (e) => {
+  const btn = e.target.closest('.del');
+  if (!btn) return;
+  const c = cooked[btn.dataset.i];
+  if (!confirm(`要刪掉「${c.name}」這張照片嗎？`)) return;
+  cooked.splice(btn.dataset.i, 1);
+  save(); refresh();
+});
+
 // 第 18 步：冰箱是空的，就先打開冰箱
 if (items.length === 0) go('fridge');
 
