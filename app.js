@@ -243,4 +243,82 @@ $('#photoInput').addEventListener('change', (e) => {
   };
   img.src = URL.createObjectURL(file);
 });
+// ===== 第 9 步：飲食設定 =====
+const MEATS = ['都吃', '不吃紅肉', '只吃海鮮', '吃素'];
+const AVOIDS = ['香菜', '海鮮', '豬肉', '牛肉', '奶製品', '蛋', '堅果', '辣', '洋蔥', '菇類'];
+const WORDS = {                        // 每個選項會擋掉名字裡有這些字的食材
+  紅肉: ['豬', '牛肉', '牛排', '羊肉'],
+  雞肉: ['雞肉', '雞胸', '雞腿'],
+  海鮮: ['魚', '蝦', '蟹', '蛤', '花枝'],
+  豬肉: ['豬'],
+  牛肉: ['牛肉', '牛排'],
+  奶製品: ['奶', '優格', '起司'],
+  蛋: ['蛋'],
+  菇類: ['菇'],
+};
+let prefs = load('prefs', null);       // null = 還沒設定過
+
+function bannedWords() {
+  if (!prefs) return [];
+  const w = [];
+  if (prefs.meat !== '都吃') w.push(...WORDS.紅肉);
+  if (prefs.meat === '只吃海鮮' || prefs.meat === '吃素') w.push(...WORDS.雞肉);
+  if (prefs.meat === '吃素') w.push(...WORDS.海鮮);
+  prefs.avoid.forEach((a) => w.push(...(WORDS[a] || [a])));
+  return w;
+}
+function badIn(r) {                    // 這道菜裡有哪些不吃的食材
+  const words = bannedWords();
+  return r.need.filter((n) => words.some((w) => n.includes(w)));
+}
+
+// 推薦清單：把有不吃食材的菜過濾掉
+const rankAll = rank;
+rank = () => rankAll().filter((r) => badIn(r).length === 0);
+
+// 打開食譜前先檢查（「我想吃…」查到的菜也會經過這裡）
+const openRecipeAll = openRecipe;
+openRecipe = (r) => {
+  const bad = badIn(r);
+  if (bad.length && !confirm(`這道菜有你不吃的：${bad.join('、')}\n還是要看做法嗎？`)) return;
+  openRecipeAll(r);
+};
+
+function openPrefs() {
+  const p = prefs ? { meat: prefs.meat, avoid: [...prefs.avoid] } : { meat: '都吃', avoid: [] };
+  const page = $('#recipePage');
+  page.innerHTML = `<div class="inner">
+    <h1>吃東西的規矩</h1>
+    <h3>吃肉嗎？</h3>
+    <div class="chips" id="meatChips">${MEATS.map((m) =>
+      `<button class="chip ${m === p.meat ? 'on' : ''}" data-m="${m}">${m}</button>`).join('')}</div>
+    <h3>有什麼不吃的？（可以複選）</h3>
+    <div class="chips" id="avoidChips">${AVOIDS.map((a) =>
+      `<button class="chip ${p.avoid.includes(a) ? 'on' : ''}" data-a="${a}">${a}</button>`).join('')}</div>
+    <button class="btn red" id="savePrefs">好了，開始用</button>
+  </div>`;
+  page.hidden = false;
+
+  $('#meatChips').onclick = (e) => {
+    if (!e.target.dataset.m) return;
+    p.meat = e.target.dataset.m;
+    document.querySelectorAll('#meatChips .chip').forEach((c) => c.classList.toggle('on', c === e.target));
+  };
+  $('#avoidChips').onclick = (e) => {
+    const a = e.target.dataset.a;
+    if (!a) return;
+    p.avoid = p.avoid.includes(a) ? p.avoid.filter((x) => x !== a) : [...p.avoid, a];
+    e.target.classList.toggle('on');
+  };
+  $('#savePrefs').onclick = () => {
+    prefs = p;
+    localStorage.setItem('prefs', JSON.stringify(prefs));
+    page.hidden = true;
+    refresh();
+  };
+}
+
+$('#home').insertAdjacentHTML('beforeend', '<p><button class="btn" id="prefsBtn">飲食設定</button></p>');
+$('#prefsBtn').onclick = openPrefs;
+if (!prefs) openPrefs();               // 第一次打開就先問
 refresh();   // ← 永遠放在檔案最後一行：一打開網頁就把畫面畫出來
