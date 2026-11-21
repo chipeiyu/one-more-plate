@@ -1,0 +1,149 @@
+/* ① 顏色變數：之後只要改這裡 */
+:root {
+  --bg: #f2ead9;
+  --paper: #fbf7ee;
+  --ink: #25211b;
+  --mute: #8b8170;
+  --line: #e2d6bf;
+  --blue: #1c3fc4;
+  --red: #e2382c;
+}
+
+/* ② 基本設定 + 紙張點點 */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 0 16px 100px;
+  max-width: 1000px;
+  margin-inline: auto;
+  background: var(--bg);
+  background-image: radial-gradient(#0000000a 1px, transparent 1.2px);
+  background-size: 5px 5px;
+  color: var(--ink);
+  font: 16px/1.6 "Noto Sans TC", sans-serif;
+}
+h2 { color: var(--blue); font-weight: 900; }
+
+/* ③ 大標題 */
+.title {
+  font-family: Anton, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: var(--blue);
+  font-size: clamp(64px, 13vw, 150px);
+  line-height: .95;
+  margin: 20px 0 0;
+}
+.tagline { color: var(--red); }
+
+/* ④ 格子桌巾：兩層半透明條紋疊在一起 */
+.ging {
+  background-color: #fffdf8;
+  background-image:
+    linear-gradient(90deg, rgba(28,63,196,.28) 50%, transparent 50%),
+    linear-gradient(rgba(28,63,196,.28) 50%, transparent 50%);
+  background-size: 30px 30px;
+}
+
+/* ⑤ 按鈕、輸入框、小標籤 */
+.btn {
+  height: 46px; padding: 0 18px; border-radius: 99px;
+  border: 1.5px solid var(--blue); background: var(--paper); color: var(--blue);
+  font: inherit; font-weight: 700; cursor: pointer;
+  display: inline-flex; align-items: center;
+}
+.btn.red {
+  background: var(--red); border-color: var(--red); color: #fff;
+  box-shadow: 0 4px 0 #9c241c;
+}
+.btn.red:active { transform: translateY(3px); box-shadow: 0 1px 0 #9c241c; }
+input {
+  font: inherit; height: 46px; padding: 0 12px; border-radius: 14px;
+  border: 1.5px solid var(--line); background: var(--paper); flex: 1; min-width: 0;
+}
+#addDays { flex: none; width: 76px; }
+.add, .wish form { display: flex; gap: 8px; margin: 12px 0; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.chip {
+  height: 38px; padding: 0 14px; border-radius: 99px; border: 1.5px solid var(--line);
+  background: var(--paper); font: inherit; cursor: pointer;
+}
+.chip.on { background: var(--ink); color: var(--bg); }
+.tag { font-size: 13px; border-radius: 99px; padding: 2px 10px; background: #dcecd8; color: #2f7d45; }
+.tag.hot { background: #f9dcd5; color: var(--red); font-weight: 700; }
+.tag.buy { background: none; border: 1px dashed var(--mute); color: var(--mute); }
+
+/* ⑥ 上方選單 */
+.top { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; gap: 10px; }
+.brand { font-family: Anton, sans-serif; color: var(--blue); font-size: 20px; }
+.menu { display: flex; gap: 6px; }
+.menu button {
+  height: 40px; padding: 0 14px; border-radius: 99px; border: 1.5px solid var(--line);
+  background: var(--paper); color: var(--blue); font: inherit; font-weight: 700; cursor: pointer;
+}
+.menu button.on { background: var(--blue); color: #fff; }
+
+/* ⑦ 首頁區塊 */
+.wish { border-radius: 24px; padding: 18px; margin: 24px 0; }
+.wish-in { background: var(--paper); border-radius: 18px; padding: 16px; max-width: 560px; }
+.wish h2 { margin: 0; }
+.soon { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+.magnet {
+  flex: none; background: var(--paper); border: 2px solid var(--red);
+  border-radius: 14px; padding: 6px 14px; transform: rotate(-2deg);
+}
+.magnet small { display: block; color: var(--red); font-weight: 700; }
+.seg { display: inline-flex; background: var(--paper); border: 1.5px solid var(--line); border-radius: 99px; padding: 4px; margin-top: 20px; }
+.seg button { border: 0; background: none; border-radius: 99px; height: 40px; padding: 0 18px; font: inherit; font-weight: 700; color: var(--blue); cursor: pointer; }
+.seg button.on { background: var(--blue); color: #fff; }
+
+/* ⑧ 食譜卡片 */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.card {
+  text-align: left; background: var(--paper); border: 1.5px solid var(--line);
+  border-radius: 20px; padding: 14px; font: inherit; color: inherit; cursor: pointer;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.card h3 { margin: 0; color: var(--blue); }
+.card .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ⑨ 冰箱清單 */
+.row {
+  display: flex; align-items: center; gap: 12px; background: var(--paper);
+  border-bottom: 1px solid var(--line); padding: 10px 14px;
+}
+.row:first-child { border-radius: 16px 16px 0 0; }
+.row:last-child { border-radius: 0 0 16px 16px; border-bottom: 0; }
+.row .name { flex: 1; }
+.row .days { font-family: Anton, sans-serif; font-size: 26px; color: var(--mute); }
+.dot { width: 11px; height: 11px; border-radius: 50%; }
+.dot.red { background: var(--red); } .dot.amber { background: #b8740a; } .dot.green { background: #2f7d45; }
+.del { border: 0; background: none; color: var(--mute); font-size: 20px; cursor: pointer; }
+
+/* ⑩ 食譜頁（蓋在畫面上） */
+.overlay { position: fixed; inset: 0; background: var(--bg); overflow: auto; padding: 20px; z-index: 10; }
+.overlay .inner { max-width: 680px; margin: 0 auto; }
+.overlay h1 { color: var(--blue); font-size: 40px; margin: 10px 0 0; }
+.overlay li { font-family: "LXGW WenKai TC", serif; font-size: 19px; margin: 8px 0; }
+
+/* ⑪ 我煮過的：格子桌巾上的圓盤子 */
+.plates {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px; padding: 24px; border-radius: 24px; margin-top: 16px; min-height: 200px;
+}
+.plate { text-align: center; }
+.plate img {
+  width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%;
+  border: 9px solid #fff; box-shadow: 0 0 0 2px var(--blue), 0 6px 0 #0002;
+}
+.plate b { background: var(--paper); border-radius: 99px; padding: 2px 10px; color: var(--blue); }
+
+/* ⑫ 手機版：選單移到最下面 */
+@media (max-width: 700px) {
+  .menu {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    background: var(--paper); border-top: 1.5px solid var(--line);
+    padding: 8px; display: grid; grid-template-columns: repeat(4, 1fr);
+  }
+  .menu button { border: 0; font-size: 13px; padding: 0; }
+}

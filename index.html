@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>One More Plate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+TC:wght@400;700;900&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">ONE MORE PLATE</div>
+    <nav class="menu">
+      <button data-page="home" class="on">今天吃什麼</button>
+      <button data-page="fridge">冰箱</button>
+      <button data-page="shop">購物清單</button>
+      <button data-page="cooked">我煮過的</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="page">
+      <h1 class="title">One more<br>plate</h1>
+      <p class="tagline">冰箱裡快過期的，先變成一盤菜。</p>
+
+      <div class="wish ging">
+        <div class="wish-in">
+          <h2>我想吃…</h2>
+          <form id="wishForm">
+            <input id="wishInput" placeholder="例如：酸菜魚">
+            <button class="btn red">教我做</button>
+          </form>
+        </div>
+      </div>
+
+      <h2>先用掉這些</h2>
+      <div id="soon" class="soon"></div>
+
+      <div class="seg">
+        <button data-mode="first" class="on">快過期優先</button>
+        <button data-mode="all">整個冰箱</button>
+      </div>
+      <div class="chips" id="cats"></div>
+      <div id="recipes" class="grid"></div>
+    </section>
+
+    <section id="fridge" class="page" hidden>
+      <h2>冰箱裡有</h2>
+      <form id="addForm" class="add">
+        <input id="addName" placeholder="食材，例如：高麗菜" required>
+        <input id="addDays" type="number" min="0" value="5" title="還能放幾天">
+        <button class="btn red">放進冰箱</button>
+      </form>
+      <div id="fridgeList"></div>
+    </section>
+
+    <section id="shop" class="page" hidden>
+      <h2>購物清單</h2>
+      <form id="shopForm" class="add">
+        <input id="shopInput" placeholder="加一樣東西">
+        <button class="btn">加入</button>
+      </form>
+      <div id="shopList"></div>
+      <button class="btn red" id="bought">買好了，放進冰箱</button>
+    </section>
+
+    <section id="cooked" class="page" hidden>
+      <h2>我煮過的</h2>
+      <label class="btn red">
+        拍照上傳
+        <input type="file" accept="image/*" id="photoInput" hidden>
+      </label>
+      <div id="plates" class="plates ging"></div>
+    </section>
+  </main>
+
+  <div id="recipePage" class="overlay" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
