@@ -536,5 +536,45 @@ $('#wishForm').addEventListener('submit', () => {
   }
 });
 
+// ===== 第 14 步：買了新食材，自動推薦新的菜 =====
+let known = load('known', null);         // 上次看到的冰箱食材名稱
+let fresh = load('fresh', []);           // 剛加進來、還沒看過的食材
 
+$('.wish').insertAdjacentHTML('afterend', '<div id="newBox"></div>');
+
+function recipesWith(name) {             // 用到這樣食材、而且沒有不吃東西的菜，缺最少的排前面
+  return BOOK
+    .filter((r) => r.need.some((n) => n.includes(name) || name.includes(n)) && badIn(r).length === 0)
+    .map((r) => ({ ...r, have: r.need.filter(find), buy: r.need.filter((n) => !find(n)) }))
+    .sort((a, b) => a.buy.length - b.buy.length)
+    .slice(0, 4);
+}
+
+function renderNew() {
+  const names = items.map((it) => it.name);
+  if (known === null) known = names;     // 第一次打開：示範食材不算新的
+  const added = names.filter((n) => !known.includes(n));
+  fresh = [...new Set([...added, ...fresh])].filter((n) => names.includes(n)).slice(0, 3);
+  known = names;
+  localStorage.setItem('known', JSON.stringify(known));
+  localStorage.setItem('fresh', JSON.stringify(fresh));
+
+  const groups = fresh.map((n) => ({ name: n, list: recipesWith(n) })).filter((g) => g.list.length);
+  if (!groups.length) { $('#newBox').innerHTML = ''; return; }
+  $('#newBox').innerHTML = `<div class="newbox">
+    <h3>冰箱有新東西！</h3>
+    ${groups.map((g, gi) => `<p>剛加的<b>${g.name}</b>可以做：</p>
+      <div class="chips">${g.list.map((r, ri) =>
+        `<button class="chip" data-g="${gi}" data-r="${ri}">${r.name}${r.buy.length ? `（缺 ${r.buy.length} 樣）` : ''}</button>`).join('')}</div>`).join('')}
+    <button class="btn" id="newOk">知道了</button>
+  </div>`;
+  $('#newBox').groups = groups;
+}
+renders.push(renderNew);
+
+$('#newBox').addEventListener('click', (e) => {
+  if (e.target.id === 'newOk') { fresh = []; localStorage.setItem('fresh', '[]'); renderNew(); return; }
+  const b = e.target.closest('[data-r]');
+  if (b) openRecipe($('#newBox').groups[b.dataset.g].list[b.dataset.r]);
+});
 refresh();   // ← 永遠放在檔案最後一行：一打開網頁就把畫面畫出來

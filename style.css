@@ -147,3 +147,13 @@ input {
   }
   .menu button { border: 0; font-size: 13px; padding: 0; }
 }
+/* ⑬ 第 14 步：先藏起「我想吃…」，之後要用再刪掉這行 */
+.wish { display: none; }
+
+/* ⑭ 第 14 步：「新食材可以做」卡片 */
+.newbox {
+  background: var(--paper); border: 2px solid var(--red); border-radius: 20px;
+  padding: 14px 16px; margin: 20px 0;
+}
+.newbox h3 { margin: 0 0 4px; color: var(--red); }
+.newbox p { margin: 10px 0 0; }
