@@ -758,7 +758,7 @@ $('#plates').addEventListener('click', (e) => {
 });
 
 // ===== 第 21 步：開場標題 =====
-// 格子桌巾鋪開、標題浮出；同一次使用只播一次，1.8 秒後淡出，點一下可以馬上跳過
+// 格子桌巾鋪開、標題浮出；同一次使用只播一次，3 秒後淡出，點一下可以馬上跳過
 const splash = $('#splash');
 if (sessionStorage.getItem('splashed')) {
   splash.remove();
@@ -768,7 +768,7 @@ if (sessionStorage.getItem('splashed')) {
     splash.classList.add('hide');
     setTimeout(() => splash.remove(), 500);
   };
-  const timer = setTimeout(hideSplash, 1800);
+  const timer = setTimeout(hideSplash, 3000);
   splash.addEventListener('click', () => { clearTimeout(timer); hideSplash(); });
 }
 

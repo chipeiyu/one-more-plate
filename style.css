@@ -250,7 +250,7 @@ input {
     linear-gradient(90deg, rgba(28, 63, 196, .26) 50%, transparent 50%),
     linear-gradient(0deg, rgba(28, 63, 196, .26) 50%, transparent 50%);
   background-size: 56px 56px;
-  animation: clothRoll .7s both cubic-bezier(.3, .8, .3, 1);
+  animation: clothRoll .9s both cubic-bezier(.3, .8, .3, 1);
 }
 #splash h1 {
   position: relative; margin: 0; padding: 18px 26px;
@@ -258,7 +258,7 @@ input {
   font-family: Anton, sans-serif; font-weight: 400;
   font-size: clamp(52px, 17vw, 110px); line-height: .95;
   color: var(--blue); letter-spacing: 1px; text-align: center;
-  animation: splashUp .5s .6s both cubic-bezier(.2, .8, .2, 1);
+  animation: splashUp .6s .8s both cubic-bezier(.2, .8, .2, 1);
 }
 #splash.hide { opacity: 0; visibility: hidden; }
 @keyframes clothRoll { from { transform: scaleY(0); } to { transform: scaleY(1); } }
