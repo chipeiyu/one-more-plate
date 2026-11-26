@@ -258,9 +258,11 @@ input {
   font-family: Anton, sans-serif; font-weight: 400;
   font-size: clamp(52px, 17vw, 110px); line-height: .95;
   color: var(--blue); letter-spacing: 1px; text-align: center;
-  animation: splashUp .6s .8s both cubic-bezier(.2, .8, .2, 1);
+  animation: splashUp .6s .8s both cubic-bezier(.2, .8, .2, 1),
+             splashWobble 1.1s 1.4s ease-in-out infinite;   /* 浮出後左右晃 */
 }
 #splash.hide { opacity: 0; visibility: hidden; }
 @keyframes clothRoll { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes splashWobble { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3deg) scale(1.03); } 75% { transform: rotate(3deg) scale(1.03); } }
 @keyframes splashUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { #splash .cloth, #splash h1 { animation: none; } }
