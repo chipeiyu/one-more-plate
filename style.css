@@ -236,3 +236,31 @@ input {
   font-size: 20px; line-height: 1; cursor: pointer;
 }
 .plate .del:active { background: var(--blue); color: #fff; }
+
+/* 第 21 步：開場畫面（格子桌巾鋪開 → 標題卡） */
+#splash {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg); transition: opacity .45s ease, visibility .45s;
+}
+#splash .cloth {
+  position: absolute; inset: 0; transform-origin: bottom;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, rgba(28, 63, 196, .26) 50%, transparent 50%),
+    linear-gradient(0deg, rgba(28, 63, 196, .26) 50%, transparent 50%);
+  background-size: 56px 56px;
+  animation: clothRoll .7s both cubic-bezier(.3, .8, .3, 1);
+}
+#splash h1 {
+  position: relative; margin: 0; padding: 18px 26px;
+  background: var(--bg); border: 4px solid #1b2340; border-radius: 18px;
+  font-family: Anton, sans-serif; font-weight: 400;
+  font-size: clamp(52px, 17vw, 110px); line-height: .95;
+  color: var(--blue); letter-spacing: 1px; text-align: center;
+  animation: splashUp .5s .6s both cubic-bezier(.2, .8, .2, 1);
+}
+#splash.hide { opacity: 0; visibility: hidden; }
+@keyframes clothRoll { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes splashUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { #splash .cloth, #splash h1 { animation: none; } }

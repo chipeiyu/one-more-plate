@@ -292,7 +292,7 @@ function openPrefs() {
   const p = prefs ? { meat: prefs.meat, avoid: [...prefs.avoid] } : { meat: '都吃', avoid: [] };
   const page = $('#recipePage');
   page.innerHTML = `<div class="inner">
-    <h1>吃東西的規矩</h1>
+    <h1>飲食習慣</h1>
     <h3>吃肉嗎？</h3>
     <div class="chips" id="meatChips">${MEATS.map((m) =>
       `<button class="chip ${m === p.meat ? 'on' : ''}" data-m="${m}">${m}</button>`).join('')}</div>
@@ -756,6 +756,27 @@ $('#plates').addEventListener('click', (e) => {
   cooked.splice(btn.dataset.i, 1);
   save(); refresh();
 });
+
+// ===== 第 21 步：開場標題 =====
+// 格子桌巾鋪開、標題浮出；同一次使用只播一次，1.8 秒後淡出，點一下可以馬上跳過
+const splash = $('#splash');
+if (sessionStorage.getItem('splashed')) {
+  splash.remove();
+} else {
+  sessionStorage.setItem('splashed', '1');
+  const hideSplash = () => {
+    splash.classList.add('hide');
+    setTimeout(() => splash.remove(), 500);
+  };
+  const timer = setTimeout(hideSplash, 1800);
+  splash.addEventListener('click', () => { clearTimeout(timer); hideSplash(); });
+}
+
+// ===== 第 22 步：「修改飲食設定」改成一顆「飲食設定」按鈕 =====
+// 拿掉旁邊的文字，按鈕直接打開設定飲食習慣的畫面
+$('#prefsText').remove();
+$('#prefsBtn').textContent = '飲食設定';
+renders[renders.indexOf(renderPrefs)] = () => {};   // 文字拿掉了，不用再更新
 
 // 第 18 步：冰箱是空的，就先打開冰箱
 if (items.length === 0) go('fridge');
